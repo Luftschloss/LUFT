@@ -1,0 +1,9 @@
+#pragma once
+
+#define PRODUCT_NAME "@package_name@"
+ 
+#define VERSION_MAJOR @luft_version_major@
+#define VERSION_MINOR @luft_version_minor@
+#define VERSION_PATCH @luft_version_patch@
+
+#define VERSIONSTR "v@luft_version_major@.@luft_version_minor@.@luft_version_patch@"
