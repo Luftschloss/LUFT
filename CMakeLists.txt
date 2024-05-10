@@ -9,5 +9,9 @@ set(luft_version_minor 0 CACHE INTERNAL "version minor")
 set(luft_version_patch 0 CACHE INTERNAL "version patch")
 set(package_name "Luft-Engine")
 
+
+add_subdirectory(vendor/freetype)
+add_subdirectory(vendor/sdl)
+add_subdirectory(vendor/imgui)
 add_subdirectory(src/Core)
 add_subdirectory(src/Client)
