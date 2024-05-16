@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Base/Application.h"
+#include "Core/Application.h"
 
 //------------------include entry point (main)------------------
-#include "Base/EntryPoint.h"
+#include "Core/EntryPoint.h"
 //--------------------------------------------------------------

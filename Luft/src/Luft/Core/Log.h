@@ -1,5 +1,5 @@
 #pragma once
-#include "Core.h"
+#include "Luft/Core/Base.h"
 #include "spdlog/spdlog.h"
 
 namespace Luft

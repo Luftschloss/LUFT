@@ -1,4 +1,4 @@
-#include "Luft.h"
+#include "Luft/Luft.h"
 
 class EditorApp : public Luft::Application
 {
