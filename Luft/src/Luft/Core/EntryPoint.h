@@ -15,8 +15,10 @@ int main(int argc, char** argv)
 	CORE_LOG_INFO("Luft Run");
 	auto app = Luft::CreateApplication();
 	app->Run();
-	delete app;
+
 	CORE_LOG_INFO("Luft End");
+	delete app;
+	
 }
 
 #endif
