@@ -28,7 +28,7 @@ namespace Luft
 	private:
 		struct WindowData
 		{
-			std::string Title;
+			lstr Title;
 			unsigned int Width, Height;
 			bool VSync;
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <ostream>
+#include "Luft/Core/lstr.h"
 #include "Luft/Core/Base.h"
 
 namespace  Luft
@@ -37,9 +38,9 @@ namespace  Luft
 		bool Handled = false;
 
 		virtual EventType GetEventType() const = 0;
-		virtual const char* GetName() const = 0;
+		virtual const lstr& GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
-		virtual std::string ToString() const { return GetName(); }
+		virtual const lstr& ToString() const { return GetName(); }
 
 		bool IsInCategory(EventCategory category)
 		{
@@ -71,6 +72,6 @@ namespace  Luft
 
 	inline std::ostream& operator<<(std::ostream& os, const Event& e)
 	{
-		return os << e.ToString();
+		return os << e.ToString().c_str();
 	}
 }

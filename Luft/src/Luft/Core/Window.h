@@ -1,5 +1,6 @@
 #pragma once
 
+#include "lstr.h"
 #include <functional>
 #include "Luft/Events/Event.h"
 
@@ -7,11 +8,11 @@ namespace Luft {
 
 	struct WindowProps
 	{
-		std::string Title;
+		lstr Title;
 		uint32_t Width;
 		uint32_t Height;
 
-		WindowProps(const std::string& title = "Luft Editor",
+		WindowProps(const lstr& title = "Luft Editor",
 			uint32_t width = 1600,
 			uint32_t height = 900)
 			: Title(title), Width(width), Height(height)
