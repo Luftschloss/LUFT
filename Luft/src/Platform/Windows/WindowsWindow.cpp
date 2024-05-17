@@ -1,6 +1,7 @@
 #include <SDL_vulkan.h>
 #include "WindowsWindow.h"
 #include "Luft/Core/Log.h"
+#include <Version.h>
 
 
 namespace Luft
@@ -103,7 +104,7 @@ namespace Luft
 		auto WindowMinHeight = display0Height * 0.55;
 		// TODO :User define toobar need add flag :SDL_WINDOW_BORDERLESS
 		SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-		m_Window = SDL_CreateWindow("Dear ImGui SDL2+Vulkan example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WindowDefaultWidth, WidnowDefaultHeight, window_flags);
+		m_Window = SDL_CreateWindow(PRODUCT_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WindowDefaultWidth, WidnowDefaultHeight, window_flags);
 		if (m_Window == nullptr)
 		{
 			CORE_LOG_ERROR("SDL_CreateWindow(): %s", SDL_GetError());

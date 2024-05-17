@@ -3,6 +3,13 @@ configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Version.h
   @ONLY)
 
+if(NOT DEFINED ENV{VK_SDK_PATH})
+	message(FATAL_ERROR "not defined vulkan sdk env [VK_SDK_PATH]£¬ check and install vulkan sdk first")  
+endif()
+set(VK_SDK_PATH $ENV{VK_SDK_PATH})
+set(VK_SDK_INCLUDE ${VK_SDK_PATH}/Include)
+set(VK_SDK_LIB ${VK_SDK_PATH}/Lib/vulkan-1.lib)
+
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/freetype)
 add_subdirectory(vendor/sdl)
@@ -19,15 +26,10 @@ add_library(Luft ${HEADER_FILES} ${SOURCE_FILES})
 set(CORE_DEFINITIONS PUBLIC LUFT_PLATFORM_WINDOWS LUFT_BUILD_DLL)
 target_compile_definitions(Luft ${CORE_DEFINITIONS})
 
-if(NOT DEFINED ENV{VK_SDK_PATH})
-	message(FATAL_ERROR "not defined vulkan sdk env :VK_SDK_PATH £¬ check")  
-endif()
-set(VK_SDK_PATH $ENV{VK_SDK_PATH})
-set(VK_SDK_INCLUDE ${VK_SDK_PATH}/Include)
-set(VK_SDK_LIB ${VK_SDK_PATH}/Lib/vulkan-1.lib)
-
 target_include_directories(Luft
  PRIVATE vendor/spdlog/include
  PRIVATE ${VK_SDK_INCLUDE}
- PUBLIC src)
+ PUBLIC src
+)
+
 target_link_libraries(Luft spdlog imgui imguuizmo ${VK_SDK_LIB})

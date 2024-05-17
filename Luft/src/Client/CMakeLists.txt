@@ -4,7 +4,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_F
 
 add_executable(Luft-Client ${HEADER_FILES} ${SOURCE_FILES})
 target_include_directories(Luft-Client PRIVATE ../Luft)
-target_link_libraries(Luft-Client imgui Luft)
+target_link_libraries(Luft-Client Luft)
 add_dependencies(Luft-Client Luft)
 
 set_target_properties(
