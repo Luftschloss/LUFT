@@ -10,6 +10,8 @@ set(VK_SDK_PATH $ENV{VK_SDK_PATH})
 set(VK_SDK_INCLUDE ${VK_SDK_PATH}/Include)
 set(VK_SDK_LIB ${VK_SDK_PATH}/Lib/vulkan-1.lib)
 
+
+
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/freetype)
 add_subdirectory(vendor/sdl)
@@ -23,7 +25,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_F
 
 add_library(Luft ${HEADER_FILES} ${SOURCE_FILES})
 
-set(CORE_DEFINITIONS PUBLIC LUFT_PLATFORM_WINDOWS LUFT_BUILD_DLL)
+set(CORE_DEFINITIONS PUBLIC LUFT_PLATFORM_WINDOWS LUFT_BUILD_DLL LUFT_USE_VULKAN_DEBUG_REPORT)
 target_compile_definitions(Luft ${CORE_DEFINITIONS})
 
 target_include_directories(Luft

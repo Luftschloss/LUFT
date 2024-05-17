@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "Luft/Core/Window.h"
+#include <imgui_impl_vulkan.h>
 
 namespace Luft
 {
@@ -24,7 +25,10 @@ namespace Luft
 
 	private:
 		virtual void Init(const WindowProps& props);
+		void VulkanSetup();
+		//void ImVulkanWindowSetup(VkSurfaceKHR surface, int width, int height);
 		virtual void Shutdown();
+
 	private:
 		struct WindowData
 		{
@@ -39,5 +43,16 @@ namespace Luft
 		WindowData m_WindowData;
 
 		SDL_Window* m_Window;
+		VkAllocationCallbacks* m_VkAllocator = nullptr;
+		VkInstance             m_VkInstance = VK_NULL_HANDLE;
+		VkDebugReportCallbackEXT m_VkDebugReport = VK_NULL_HANDLE;
+		VkPhysicalDevice       m_VkPhysicalDevice = VK_NULL_HANDLE;
+		uint32_t m_VkQueueFamily = (uint32_t)-1;
+		VkDevice m_VkDevice = VK_NULL_HANDLE;
+		VkQueue m_VkQueue = VK_NULL_HANDLE;
+		VkPipelineCache          m_VkPipelineCache = VK_NULL_HANDLE;
+		VkDescriptorPool         m_VkDescriptorPool = VK_NULL_HANDLE;
+		
+		ImGui_ImplVulkanH_Window m_MainWindowData;
 	};
 }

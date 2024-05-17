@@ -10,6 +10,7 @@
 
 #include "Luft/Core/Application.h"
 #include "Luft/Core/Log.h"
+#include "Luft/Core/SystemService.h"
 
 
 namespace Luft {
@@ -33,8 +34,9 @@ namespace Luft {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
 		float fontSize = 18.0f;// *2.0f;
-		io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Bold.ttf", fontSize);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Regular.ttf", fontSize);
+		auto font = GetResVal(ResKey::font_path_puhui3);
+		io.Fonts->AddFontFromFileTTF(font.value(), fontSize);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF(font.value(), fontSize);
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();

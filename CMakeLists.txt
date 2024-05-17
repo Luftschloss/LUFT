@@ -19,4 +19,9 @@ file(COPY
   DESTINATION ${target_directory}
 )
 
+file(COPY
+  ${CMAKE_SOURCE_DIR}/resources
+  DESTINATION ${target_directory}
+)
+
 add_subdirectory(Luft)
