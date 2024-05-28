@@ -1,2 +1,2 @@
 # LUFT
-a personal game engine
+a simple game engine
