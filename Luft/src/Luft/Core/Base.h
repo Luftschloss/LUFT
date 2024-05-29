@@ -11,6 +11,10 @@
 #error Luft only supports Windows!
 #endif
 
+#define LUFT_RENDERER_BACKEND_VULKAN
+//#define LUFT_RENDERER_BACKEND_OPENGL
+//#define LUFT_RENDERER_BACKEND_DX
+
 #define BIT(x) (1<<x)
 
 #define ARRAYSIZE(arr) ((int)(sizeof(arr) / sizeof(*(arr))))

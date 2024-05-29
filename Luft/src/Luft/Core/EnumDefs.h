@@ -3,7 +3,7 @@
 
 namespace Luft
 {
-	enum class FontConfigKey
+	enum class IntKey
 	{
 		font_size_max,
 		font_size_title,

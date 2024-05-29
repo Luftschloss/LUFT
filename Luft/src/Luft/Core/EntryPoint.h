@@ -19,6 +19,7 @@ int main(int argc, char** argv)
 	CORE_LOG_INFO("Luft End");
 	delete app;
 	
+	return 0;
 }
 
 #endif

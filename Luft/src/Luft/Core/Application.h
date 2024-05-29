@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "LayerStack.h"
 #include "Luft/ImGui/ImGuiLayer.h"
+#include "Luft/Events/ApplicationEvents.h"
 
 int main(int argc, char** argv);
 
@@ -19,12 +20,17 @@ namespace Luft
 	public:
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
-
-		void OnEvent(Event& e);
-
+		void PushEvent(Event& eve)
+		{
+			OnEvent(eve);
+		}
 		static Application& Get() { return *s_Instance; }
 		Window& GetWindow() { return *m_Window; }
 	private:
+		void OnEvent(Event& e);
+		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
+
 		static Application* s_Instance;
 		Scope<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;

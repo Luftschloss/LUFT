@@ -11,7 +11,7 @@ file(GLOB SRC
 
 add_library(imgui ${SRC})
 target_include_directories(imgui
-PRIVATE ${VK_SDK_INCLUDE}
+PUBLIC ${VK_SDK_INCLUDE}
 PUBLIC . backends misc/freetype
 )
 target_link_libraries(imgui sdl2 freetype)

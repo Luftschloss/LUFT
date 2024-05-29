@@ -7,5 +7,5 @@ namespace Luft
 	//resource
 	std::optional<char const*> GetResVal(ResKey);
 	//
-	std::optional<int> GetIntVal(FontConfigKey);
+	std::optional<int> GetIntVal(IntKey);
 }

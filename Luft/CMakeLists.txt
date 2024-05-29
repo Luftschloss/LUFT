@@ -29,6 +29,7 @@ set(CORE_DEFINITIONS PUBLIC LUFT_PLATFORM_WINDOWS LUFT_BUILD_DLL LUFT_USE_VULKAN
 target_compile_definitions(Luft ${CORE_DEFINITIONS})
 
 target_include_directories(Luft
+ PRIVATE vendor/imgui
  PRIVATE vendor/spdlog/include
  PRIVATE ${VK_SDK_INCLUDE}
  PUBLIC src

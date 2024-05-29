@@ -1,8 +1,7 @@
 #include <SDL_vulkan.h>
-#include <vulkan/vulkan.h>
 #include "WindowsWindow.h"
 #include "Luft/Core/Log.h"
-#include <Version.h>
+#include "Version.h"
 #include "Luft/Core/larray.h"
 
 
@@ -79,7 +78,7 @@ namespace Luft
 	{
 		if (err == 0)
 			return;
-		//CORE_LOG_ERROR("[vulkan] Error: VkResult = {0}", err);
+		CORE_LOG_ERROR("[vulkan] Error: VkResult = {0}", (int)err);
 		if (err < 0)
 			abort();
 	}
@@ -96,7 +95,8 @@ namespace Luft
 #ifdef SDL_HINT_IME_SHOW_UI
 		SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
 #endif
-		// Create window with Vulkan graphics context
+
+		// Get Display 0 info
 		SDL_DisplayMode sdm0;
 		SDL_GetCurrentDisplayMode(0, &sdm0);
 		auto display0Width = sdm0.w;
@@ -105,6 +105,8 @@ namespace Luft
 		auto WindowDefaultHeight = display0Height * 0.8;
 		auto WindowMinWidth = display0Width * 0.55;
 		auto WindowMinHeight = display0Height * 0.55;
+
+		// Create window with Vulkan graphics context
 		// TODO :User define toobar need add flag :SDL_WINDOW_BORDERLESS
 		SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 		m_Window = SDL_CreateWindow(PRODUCT_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WindowDefaultWidth, WindowDefaultHeight, window_flags);
@@ -117,22 +119,17 @@ namespace Luft
 		SDL_SetWindowMinimumSize(m_Window, WindowMinWidth, WindowMinHeight);
 		// TODO :User define toobar
 		//SDL_SetWindowHitTest(window, HitTestCallback, NULL);
-		SDL_AddEventWatch(SDLEventWatcher, this->m_Window);
+		//SDL_AddEventWatch(SDLEventWatcher, this->m_Window);
 
 		//Vulkan Setup
 		VulkanSetup();
 
 		// Create Window Surface
-		VkSurfaceKHR surface;
-		VkResult err;
-		if (SDL_Vulkan_CreateSurface(m_Window, m_VkInstance, &surface) == 0)
+		if (SDL_Vulkan_CreateSurface(m_Window, m_VkInstance, &m_VkSurface) == 0)
 		{
 			CORE_LOG_ERROR("Failed to create Vulkan surface.");
 			return;
 		}
-
-		// Create Framebuffers
-		//ImVulkanWindowSetup(surface, WindowDefaultWidth, WindowDefaultHeight);
 	}
 
 #ifdef LUFT_USE_VULKAN_DEBUG_REPORT
@@ -248,9 +245,10 @@ namespace Luft
 		// Select graphics queue family
 		{
 			uint32_t count;
+			larray<VkQueueFamilyProperties> queues;
 			vkGetPhysicalDeviceQueueFamilyProperties(m_VkPhysicalDevice, &count, NULL);
-			VkQueueFamilyProperties* queues = (VkQueueFamilyProperties*)malloc(sizeof(VkQueueFamilyProperties) * count);
-			vkGetPhysicalDeviceQueueFamilyProperties(m_VkPhysicalDevice, &count, queues);
+			queues.resize(count);
+			vkGetPhysicalDeviceQueueFamilyProperties(m_VkPhysicalDevice, &count, queues.data());
 			for (uint32_t i = 0; i < count; i++)
 			{
 				if (queues[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
@@ -259,7 +257,6 @@ namespace Luft
 					break;
 				}
 			}
-			free(queues);
 			assert(m_VkQueueFamily != (uint32_t)-1);
 		}
 
@@ -318,40 +315,19 @@ namespace Luft
 		}
 	}
 
-//	void WindowsWindow::ImVulkanWindowSetup(VkSurfaceKHR surface, int width, int height)
-//	{
-//		m_MainWindowData.Surface = surface;
-//		
-//		// Check for WSI support
-//		VkBool32 res;
-//		vkGetPhysicalDeviceSurfaceSupportKHR(m_VkPhysicalDevice, m_VkQueueFamily, m_MainWindowData.Surface, &res);
-//		if (res != VK_TRUE)
-//		{
-//			fprintf(stderr, "Error no WSI support on physical device 0\n");
-//			exit(-1);
-//		}
-//
-//		// Select Surface Format
-//		const VkFormat requestSurfaceImageFormat[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
-//		const VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-//		m_MainWindowData.SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(m_VkPhysicalDevice, m_MainWindowData.Surface, requestSurfaceImageFormat, (size_t)ARRAYSIZE(requestSurfaceImageFormat), requestSurfaceColorSpace);
-//
-//		// Select Present Mode
-//#ifdef APP_UNLIMITED_FRAME_RATE
-//		VkPresentModeKHR present_modes[] = { VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR, VK_PRESENT_MODE_FIFO_KHR };
-//#else
-//		VkPresentModeKHR present_modes[] = { VK_PRESENT_MODE_FIFO_KHR };
-//#endif
-//		m_MainWindowData.PresentMode = ImGui_ImplVulkanH_SelectPresentMode(m_VkPhysicalDevice, m_MainWindowData.Surface, &present_modes[0], ARRAYSIZE(present_modes));
-//		//printf("[vulkan] Selected PresentMode = %d\n", wd->PresentMode);
-//
-//		// Create SwapChain, RenderPass, Framebuffer, etc.
-//		const uint32_t minImageCount = 2;
-//		ImGui_ImplVulkanH_CreateOrResizeWindow(m_VkInstance, m_VkPhysicalDevice, m_VkDevice, &m_MainWindowData, m_VkQueueFamily, m_VkAllocator, width, height, minImageCount);
-//	}
-
 	void WindowsWindow::Shutdown()
 	{
-		
+		vkDestroyDescriptorPool(m_VkDevice, m_VkDescriptorPool, m_VkAllocator);
+
+#ifdef LUFT_USE_VULKAN_DEBUG_REPORT
+		// Remove the debug report callback
+		auto f_vkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_VkInstance, "vkDestroyDebugReportCallbackEXT");
+		f_vkDestroyDebugReportCallbackEXT(m_VkInstance, m_VkDebugReport, m_VkAllocator);
+#endif // APP_USE_VULKAN_DEBUG_REPORT
+
+		vkDestroyDevice(m_VkDevice, m_VkAllocator);
+		vkDestroyInstance(m_VkInstance, m_VkAllocator);
+		SDL_DestroyWindow(m_Window);
+		SDL_Quit();
 	}
 }
